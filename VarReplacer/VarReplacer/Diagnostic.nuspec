@@ -1,0 +1,26 @@
+﻿<?xml version="1.0"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
+  <metadata>
+    <id>VarReplacer</id>
+    <version>1.0.0.0</version>
+    <title>Var Replacer</title>
+    <authors>Peter Spada</authors>
+    <owners>Peter Spada</owners>
+    <licenseUrl>https://github.com/spadapet/var-remover-vsix</licenseUrl>
+    <projectUrl>https://github.com/spadapet/var-remover-vsix</projectUrl>
+    <!--<iconUrl>http://ICON_URL_HERE_OR_DELETE_THIS_LINE</iconUrl>-->
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>This is a Visual Studio plugin that will help you replace use of "var" in your C# code with the actual type name.</description>
+    <!--<releaseNotes></releaseNotes>-->
+    <copyright>Copyright 2016</copyright>
+    <tags>var, remove, replace, c#</tags>
+    <frameworkAssemblies>
+      <frameworkAssembly assemblyName="System" targetFramework="" />
+    </frameworkAssemblies>
+  </metadata>
+  <!-- The convention for analyzers is to put language agnostic dlls in analyzers\portable50 and language specific analyzers in either analyzers\portable50\cs or analyzers\portable50\vb -->
+  <files>
+    <file src="*.dll" target="analyzers\dotnet\cs" exclude="**\Microsoft.CodeAnalysis.*;**\System.Collections.Immutable.*;**\System.Reflection.Metadata.*;**\System.Composition.*" />
+    <file src="tools\*.ps1" target="tools\" />
+  </files>
+</package>
