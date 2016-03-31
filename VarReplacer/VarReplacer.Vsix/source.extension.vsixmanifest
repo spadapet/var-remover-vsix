@@ -3,8 +3,11 @@
   <Metadata>
     <Identity Id="VarReplacer..8947c111-320d-47c5-aafc-f230edd29872" Version="1.0" Language="en-US" Publisher="Peter Spada"/>
     <DisplayName>Var Replacer C#</DisplayName>
-    <Description xml:space="preserve">This is a Visual Studio plugin that will help you replace use of "var" in your C# code with the actual type name.</Description>
+    <Description xml:space="preserve">This C# analyzer plugin will help you replace the use of "var" in your code with the actual type name. In fact, it causes vars to be treated as errors.</Description>
     <MoreInfo>https://github.com/spadapet/var-remover-vsix</MoreInfo>
+    <Icon>icon32.png</Icon>
+    <PreviewImage>image.png</PreviewImage>
+    <Tags>var remove replace types c#</Tags>
   </Metadata>
   <Installation>
     <InstallationTarget Version="[14.0,]" Id="Microsoft.VisualStudio.Pro" />
