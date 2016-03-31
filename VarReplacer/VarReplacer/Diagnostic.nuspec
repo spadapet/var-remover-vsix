@@ -3,7 +3,7 @@
   <metadata>
     <id>VarReplacer</id>
     <version>1.0.0.0</version>
-    <title>Var Replacer</title>
+    <title>Var Replacer C#</title>
     <authors>Peter Spada</authors>
     <owners>Peter Spada</owners>
     <licenseUrl>https://github.com/spadapet/var-remover-vsix</licenseUrl>
@@ -13,7 +13,7 @@
     <description>This is a Visual Studio plugin that will help you replace use of "var" in your C# code with the actual type name.</description>
     <!--<releaseNotes></releaseNotes>-->
     <copyright>Copyright 2016</copyright>
-    <tags>var, remove, replace, c#</tags>
+    <tags>var, remove, replace, types, c#</tags>
     <frameworkAssemblies>
       <frameworkAssembly assemblyName="System" targetFramework="" />
     </frameworkAssemblies>
