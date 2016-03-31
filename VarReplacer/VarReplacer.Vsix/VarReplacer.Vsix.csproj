@@ -58,10 +58,13 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Resources\icon32.png">
+    <Content Include="Resources\icon32.ico">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
+    <None Include="Resources\icon32.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="Resources\icon64.png" />
     <Content Include="Resources\image.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
