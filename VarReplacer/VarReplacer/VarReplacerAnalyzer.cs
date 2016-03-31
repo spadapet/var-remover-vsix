@@ -1,9 +1,9 @@
 using System.Collections.Immutable;
-using System.Diagnostics;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Diagnostics;
+using System.Collections.Generic;
 
 namespace VarReplacer
 {
@@ -21,7 +21,7 @@ namespace VarReplacer
             VarReplacerAnalyzer.Title,
             VarReplacerAnalyzer.MessageFormat,
             VarReplacerAnalyzer.Category,
-            DiagnosticSeverity.Warning,
+            DiagnosticSeverity.Error,
             isEnabledByDefault: true,
             description: VarReplacerAnalyzer.Description);
 
@@ -39,14 +39,7 @@ namespace VarReplacer
 
         public override void Initialize(AnalysisContext context)
         {
-            context.RegisterSyntaxNodeAction(VarReplacerAnalyzer.AnalyzeField, SyntaxKind.FieldDeclaration);
             context.RegisterSyntaxNodeAction(VarReplacerAnalyzer.AnalyzeVariable, SyntaxKind.VariableDeclaration);
-        }
-
-        private static void AnalyzeField(SyntaxNodeAnalysisContext context)
-        {
-            FieldDeclarationSyntax node = (FieldDeclarationSyntax)context.Node;
-            VarReplacerAnalyzer.AnalyzeDeclaration(context, node.Declaration);
         }
 
         private static void AnalyzeVariable(SyntaxNodeAnalysisContext context)
@@ -57,21 +50,35 @@ namespace VarReplacer
 
         private static void AnalyzeDeclaration(SyntaxNodeAnalysisContext context, VariableDeclarationSyntax node)
         {
-            if (node != null && node.Type != null && node.Type.IsVar && !context.CancellationToken.IsCancellationRequested)
+            if (node != null &&
+                node.Type != null &&
+                node.Type.IsVar &&
+                node.Variables != null &&
+                node.Variables.Count == 1 &&
+                !context.CancellationToken.IsCancellationRequested)
             {
                 ITypeSymbol realType = null;
-                VariableDeclaratorSyntax decl = node.Variables.FirstOrDefault();
+                ExpressionSyntax expression = node.Variables[0].Initializer?.Value;
 
-                ExpressionSyntax expression = decl?.Initializer?.Value;
                 if (expression != null)
                 {
                     TypeInfo expressionType = context.SemanticModel.GetTypeInfo(expression, context.CancellationToken);
                     realType = expressionType.Type;
                 }
 
-                if (realType != null && !context.CancellationToken.IsCancellationRequested)
+                if (realType != null && !realType.IsAnonymousType && !context.CancellationToken.IsCancellationRequested)
                 {
-                    Diagnostic diagnostic = Diagnostic.Create(VarReplacerAnalyzer.Rule, node.Type.GetLocation(), realType.Name);
+                    string realName = realType.ToMinimalDisplayString(context.SemanticModel, node.Type.SpanStart);
+                    IDictionary<string, string> props = new Dictionary<string, string>
+                    {
+                        {  "RealName", realName }
+                    };
+
+                    Diagnostic diagnostic = Diagnostic.Create(
+                        VarReplacerAnalyzer.Rule,
+                        node.Type.GetLocation(),
+                        props.ToImmutableDictionary(),
+                        realName);
                     context.ReportDiagnostic(diagnostic);
                 }
             }
