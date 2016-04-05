@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using Microsoft.CodeAnalysis;
@@ -33,32 +32,19 @@ namespace VarReplacer
 
         public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics
         {
-            get
-            {
-                return ImmutableArray.Create(VarReplacerAnalyzer.Rule);
-            }
+            get { return ImmutableArray.Create(VarReplacerAnalyzer.Rule); }
         }
 
         public override void Initialize(AnalysisContext context)
         {
-            context.RegisterSyntaxNodeAction(VarReplacerAnalyzer.AnalyzeVariable, SyntaxKind.VariableDeclaration);
+            context.RegisterSyntaxNodeAction(VarReplacerAnalyzer.AnalyzeDeclaration, SyntaxKind.VariableDeclaration);
             context.RegisterSyntaxNodeAction(VarReplacerAnalyzer.AnalyzeForEach, SyntaxKind.ForEachStatement);
         }
 
-        private static void AnalyzeVariable(SyntaxNodeAnalysisContext context)
+        private static void AnalyzeDeclaration(SyntaxNodeAnalysisContext context)
         {
-            VariableDeclarationSyntax node = (VariableDeclarationSyntax)context.Node;
-            VarReplacerAnalyzer.AnalyzeDeclaration(context, node);
-        }
+            VariableDeclarationSyntax node = context.Node as VariableDeclarationSyntax;
 
-        private static void AnalyzeForEach(SyntaxNodeAnalysisContext context)
-        {
-            ForEachStatementSyntax node = (ForEachStatementSyntax)context.Node;
-            VarReplacerAnalyzer.AnalyzeForEach(context, node);
-        }
-
-        private static void AnalyzeDeclaration(SyntaxNodeAnalysisContext context, VariableDeclarationSyntax node)
-        {
             if (node != null &&
                 node.Type != null &&
                 node.Type.IsVar &&
@@ -66,21 +52,19 @@ namespace VarReplacer
                 node.Variables.Count == 1 &&
                 !context.CancellationToken.IsCancellationRequested)
             {
-                ITypeSymbol realType = null;
                 ExpressionSyntax expression = node.Variables[0].Initializer?.Value;
-
                 if (expression != null)
                 {
                     TypeInfo expressionType = context.SemanticModel.GetTypeInfo(expression, context.CancellationToken);
-                    realType = expressionType.Type;
+                    CheckVar(context, expressionType.Type, node.Type.GetLocation());
                 }
-
-                CheckVar(context, realType, node.Type.GetLocation());
             }
         }
 
-        private static void AnalyzeForEach(SyntaxNodeAnalysisContext context, ForEachStatementSyntax node)
+        private static void AnalyzeForEach(SyntaxNodeAnalysisContext context)
         {
+            ForEachStatementSyntax node = context.Node as ForEachStatementSyntax;
+
             if (node != null &&
                 node.Type != null &&
                 node.Type.IsVar &&
@@ -107,6 +91,7 @@ namespace VarReplacer
                     varLocation,
                     props.ToImmutableDictionary(),
                     realName);
+
                 context.ReportDiagnostic(diagnostic);
             }
         }
