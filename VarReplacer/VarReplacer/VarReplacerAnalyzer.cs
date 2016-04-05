@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using Microsoft.CodeAnalysis;
@@ -11,6 +12,7 @@ namespace VarReplacer
     public class VarReplacerAnalyzer : DiagnosticAnalyzer
     {
         public const string DiagnosticId = "VarIsBad";
+        public const string RealNameProp = "RealName";
         private const string Title = "Var replacer";
         private const string MessageFormat = "Use '{0}' instead of var";
         private const string Description = "Using var will hide the type from code reviewers, so always use the actual type name.";
@@ -40,12 +42,19 @@ namespace VarReplacer
         public override void Initialize(AnalysisContext context)
         {
             context.RegisterSyntaxNodeAction(VarReplacerAnalyzer.AnalyzeVariable, SyntaxKind.VariableDeclaration);
+            context.RegisterSyntaxNodeAction(VarReplacerAnalyzer.AnalyzeForEach, SyntaxKind.ForEachStatement);
         }
 
         private static void AnalyzeVariable(SyntaxNodeAnalysisContext context)
         {
             VariableDeclarationSyntax node = (VariableDeclarationSyntax)context.Node;
             VarReplacerAnalyzer.AnalyzeDeclaration(context, node);
+        }
+
+        private static void AnalyzeForEach(SyntaxNodeAnalysisContext context)
+        {
+            ForEachStatementSyntax node = (ForEachStatementSyntax)context.Node;
+            VarReplacerAnalyzer.AnalyzeForEach(context, node);
         }
 
         private static void AnalyzeDeclaration(SyntaxNodeAnalysisContext context, VariableDeclarationSyntax node)
@@ -66,21 +75,39 @@ namespace VarReplacer
                     realType = expressionType.Type;
                 }
 
-                if (realType != null && !realType.IsAnonymousType && !context.CancellationToken.IsCancellationRequested)
-                {
-                    string realName = realType.ToMinimalDisplayString(context.SemanticModel, node.Type.SpanStart);
-                    IDictionary<string, string> props = new Dictionary<string, string>
-                    {
-                        {  "RealName", realName }
-                    };
+                CheckVar(context, realType, node.Type.GetLocation());
+            }
+        }
 
-                    Diagnostic diagnostic = Diagnostic.Create(
-                        VarReplacerAnalyzer.Rule,
-                        node.Type.GetLocation(),
-                        props.ToImmutableDictionary(),
-                        realName);
-                    context.ReportDiagnostic(diagnostic);
-                }
+        private static void AnalyzeForEach(SyntaxNodeAnalysisContext context, ForEachStatementSyntax node)
+        {
+            if (node != null &&
+                node.Type != null &&
+                node.Type.IsVar &&
+                node.Expression != null &&
+                !context.CancellationToken.IsCancellationRequested)
+            {
+                ForEachStatementInfo info = context.SemanticModel.GetForEachStatementInfo(node);
+                CheckVar(context, info.ElementType, node.Type.GetLocation());
+            }
+        }
+
+        private static void CheckVar(SyntaxNodeAnalysisContext context, ITypeSymbol realType, Location varLocation)
+        {
+            if (realType != null && !realType.IsAnonymousType && !context.CancellationToken.IsCancellationRequested)
+            {
+                string realName = realType.ToMinimalDisplayString(context.SemanticModel, varLocation.SourceSpan.Start);
+                IDictionary<string, string> props = new Dictionary<string, string>
+                {
+                    {  VarReplacerAnalyzer.RealNameProp, realName }
+                };
+
+                Diagnostic diagnostic = Diagnostic.Create(
+                    VarReplacerAnalyzer.Rule,
+                    varLocation,
+                    props.ToImmutableDictionary(),
+                    realName);
+                context.ReportDiagnostic(diagnostic);
             }
         }
     }

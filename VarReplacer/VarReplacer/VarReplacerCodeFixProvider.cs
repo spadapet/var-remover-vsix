@@ -40,7 +40,8 @@ namespace VarReplacer
             foreach (Diagnostic diagnostic in diagnostics)
             {
                 string realName;
-                if (diagnostic.Properties.TryGetValue("RealName", out realName) && !string.IsNullOrEmpty(realName))
+                if (diagnostic.Properties.TryGetValue(VarReplacerAnalyzer.RealNameProp, out realName) &&
+                    !string.IsNullOrEmpty(realName))
                 {
                     context.RegisterCodeFix(
                         CodeAction.Create(
