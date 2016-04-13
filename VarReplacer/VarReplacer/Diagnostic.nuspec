@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
   <metadata>
     <id>VarReplacer</id>
-    <version>1.0.0.0</version>
+    <version>1.3.0.0</version>
     <title>Var Replacer C#</title>
     <authors>Peter Spada</authors>
     <owners>Peter Spada</owners>

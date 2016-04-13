@@ -14,7 +14,7 @@ namespace VarReplacer
         public const string RealNameProp = "RealName";
         private const string Title = "Var replacer";
         private const string MessageFormat = "Use '{0}' instead of var";
-        private const string Description = "Using var will hide the type from code reviewers, so always use the actual type name.";
+        private const string Description = "Using var will hide the type from code reviewers, so it's best to use the actual type name.";
         private const string Category = "Style";
 
         private static DiagnosticDescriptor Rule = new DiagnosticDescriptor(
@@ -22,7 +22,7 @@ namespace VarReplacer
             VarReplacerAnalyzer.Title,
             VarReplacerAnalyzer.MessageFormat,
             VarReplacerAnalyzer.Category,
-            DiagnosticSeverity.Error,
+            DiagnosticSeverity.Hidden,
             isEnabledByDefault: true,
             description: VarReplacerAnalyzer.Description);
 

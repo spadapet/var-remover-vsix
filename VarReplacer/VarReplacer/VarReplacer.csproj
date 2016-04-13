@@ -7,7 +7,6 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{43351E15-84EF-4D91-B004-18C889E02D60}</ProjectGuid>
     <OutputType>Library</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>VarReplacer</RootNamespace>
     <AssemblyName>VarReplacer</AssemblyName>
     <ProjectTypeGuids>{786C830F-07A1-408B-BD7F-6EE04809D6DB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
@@ -34,7 +33,7 @@
   <ItemGroup>
     <Compile Include="VarReplacerCodeFixProvider.cs" />
     <Compile Include="VarReplacerAnalyzer.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Diagnostic.nuspec">
@@ -108,11 +107,4 @@
       <Output TaskParameter="ConsoleOutput" PropertyName="OutputOfExec" />
     </Exec>
   </Target>
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
-       Other similar extension points exist, see Microsoft.Common.targets.
-  <Target Name="BeforeBuild">
-  </Target>
-  <Target Name="AfterBuild">
-  </Target>
-  -->
 </Project>

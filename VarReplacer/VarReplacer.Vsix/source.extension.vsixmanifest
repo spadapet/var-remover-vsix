@@ -1,9 +1,9 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <PackageManifest Version="2.0.0" xmlns="http://schemas.microsoft.com/developer/vsx-schema/2011" xmlns:d="http://schemas.microsoft.com/developer/vsx-schema-design/2011">
   <Metadata>
-    <Identity Id="VarReplacer..8947c111-320d-47c5-aafc-f230edd29872" Version="1.2" Language="en-US" Publisher="Peter Spada"/>
+    <Identity Id="VarReplacer..8947c111-320d-47c5-aafc-f230edd29872" Version="1.3" Language="en-US" Publisher="Peter Spada"/>
     <DisplayName>Var Replacer C#</DisplayName>
-    <Description xml:space="preserve">This C# analyzer plugin will help you replace the use of "var" in your code with the actual type name. In fact, it causes vars to be treated as errors.</Description>
+    <Description xml:space="preserve">This C# analyzer plugin will help you replace "var" with the actual type name. Use the light bulb to change it. If you want to have "var" show up as a warning or error, you can create a custom .ruleset file for your solution.</Description>
     <MoreInfo>https://visualstudiogallery.msdn.microsoft.com/715694b9-e822-44e6-9739-f237f18a4690</MoreInfo>
     <GettingStartedGuide>https://visualstudiogallery.msdn.microsoft.com/715694b9-e822-44e6-9739-f237f18a4690</GettingStartedGuide>
     <ReleaseNotes>https://visualstudiogallery.msdn.microsoft.com/715694b9-e822-44e6-9739-f237f18a4690</ReleaseNotes>
