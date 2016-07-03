@@ -31,6 +31,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="ITypeSymbolExtensions.cs" />
     <Compile Include="VarReplacerCodeFixProvider.cs" />
     <Compile Include="VarReplacerAnalyzer.cs" />
     <Compile Include="AssemblyInfo.cs" />
