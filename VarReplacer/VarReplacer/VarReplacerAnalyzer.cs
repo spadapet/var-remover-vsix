@@ -78,7 +78,7 @@ namespace VarReplacer
 
         private static void CheckVar(SyntaxNodeAnalysisContext context, ITypeSymbol realType, Location varLocation)
         {
-            if (realType != null && !realType.IsAnonymousType && !context.CancellationToken.IsCancellationRequested)
+            if (realType != null && !realType.HasAnonymousType() && !context.CancellationToken.IsCancellationRequested)
             {
                 string realName = realType.ToMinimalDisplayString(context.SemanticModel, varLocation.SourceSpan.Start);
                 IDictionary<string, string> props = new Dictionary<string, string>
