@@ -78,7 +78,7 @@ namespace VarReplacer
 
         private static void CheckVar(SyntaxNodeAnalysisContext context, ITypeSymbol realType, Location varLocation)
         {
-            if (realType != null && !realType.HasAnonymousType() && !context.CancellationToken.IsCancellationRequested)
+            if (realType != null && !HasAnonymousType(realType) && !context.CancellationToken.IsCancellationRequested)
             {
                 string realName = realType.ToMinimalDisplayString(context.SemanticModel, varLocation.SourceSpan.Start);
                 IDictionary<string, string> props = new Dictionary<string, string>
@@ -94,6 +94,37 @@ namespace VarReplacer
 
                 context.ReportDiagnostic(diagnostic);
             }
+        }
+
+        private static bool HasAnonymousType(ITypeSymbol realType)
+        {
+            if (realType != null)
+            {
+                if (realType.IsAnonymousType)
+                {
+                    return true;
+                }
+
+                IArrayTypeSymbol arrayType = realType as IArrayTypeSymbol;
+                if (arrayType != null && HasAnonymousType(arrayType.ElementType))
+                {
+                    return true;
+                }
+
+                INamedTypeSymbol namedType = realType as INamedTypeSymbol;
+                if (namedType != null && namedType.IsGenericType)
+                {
+                    foreach (ITypeSymbol argument in namedType.TypeArguments)
+                    {
+                        if (HasAnonymousType(argument as INamedTypeSymbol))
+                        {
+                            return true;
+                        }
+                    }
+                }
+            }
+
+            return false;
         }
     }
 }
