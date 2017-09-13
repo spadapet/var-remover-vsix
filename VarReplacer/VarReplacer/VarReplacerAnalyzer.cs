@@ -10,7 +10,7 @@ namespace VarReplacer
     [DiagnosticAnalyzer(LanguageNames.CSharp)]
     public class VarReplacerAnalyzer : DiagnosticAnalyzer
     {
-        public const string DiagnosticId = "VarIsBad";
+        public const string DiagnosticId = "ReplaceVarWithType";
         public const string RealNameProp = "RealName";
         private const string Title = "Var replacer";
         private const string MessageFormat = "Use '{0}' instead of var";

@@ -12,7 +12,7 @@ using Microsoft.CodeAnalysis.Text;
 namespace VarReplacer
 {
     [Shared]
-    [ExportCodeFixProvider(LanguageNames.CSharp, Name = nameof(VarReplacerCodeFixProvider))]
+    [ExportCodeFixProvider(LanguageNames.CSharp, Name = nameof(VarReplacerCodeFixProvider) + "Package")]
     public class VarReplacerCodeFixProvider : CodeFixProvider
     {
         public VarReplacerCodeFixProvider()
